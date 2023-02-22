@@ -31,7 +31,7 @@ def capture_photo(number):
         opt = argparse.Namespace()
         opt.detect_model = 'weights/yolov7-lite-s.pt'
         opt.rec_model = 'weights/plate_rec.pth'
-        opt.source = 'imgs/R.jpg'
+        opt.source = 'imgs/photo2.jpg'
         opt.img_size = 640
         opt.output = 'result'
         opt.kpt_label = 4

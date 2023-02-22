@@ -201,7 +201,7 @@ def main(opt):
     dict_list=detect_Recognition_plate(model, img, device,plate_rec_model,opt.img_size)
     print("Plat Nomor:")
     if(len(dict_list)>1):
-        print(dict_list[0]['plate_no'])
+        print(dict_list)
     else:
         print(dict_list[0]['plate_no'])
     ori_img=draw_result(img,dict_list)
@@ -223,6 +223,6 @@ def main(opt):
     #     cv2.imwrite(save_img_path,ori_img)
     
     if(len(dict_list)>1):
-        return(dict_list[0]['plate_no'])
+        return(dict_list)
     else:
         return(dict_list[0]['plate_no'])
