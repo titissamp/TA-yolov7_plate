@@ -2,9 +2,17 @@ import cv2
 import tkinter as tk
 from PIL import Image, ImageTk
 from detect_rec_plate_custom import main
-import argparse
+import argparse, pymongo
+
+client = pymongo.MongoClient("mongodb://localhost:27017/")
+db = client["gateparking"]
+data_mahasiswa = db["data_mahasiswa"]
+
 # Initialize the video capture object
 cap = cv2.VideoCapture(0)
+
+# Query
+postgreSQL_select_Query = "select * from publisher"
 
 # Create the GUI window
 root = tk.Tk()
@@ -14,8 +22,9 @@ def on_key_press(event):
     capture_photo(number)
 # Define a function to capture a photo
 def capture_photo(number):
-    if len(number) >= 12:
+    if len(number) >= 10:
         #Read a frame from the video stream
+        entry.delete(0, 10)
         ret, frame = cap.read()
         # Convert the frame to RGB format
         # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -36,9 +45,11 @@ def capture_photo(number):
         opt.output = 'result'
         opt.kpt_label = 4
         plat_nomor = main(opt)
-        text = tk.Text(root)
-        text.insert('1.0',f'Plat Nomor: {plat_nomor}')
-        text.pack()
+        doc = data_mahasiswa.find_one({"$and": [{"rfid": number}, {"plat_nomor": plat_nomor}]})
+        if doc:
+            print(f"RFID {number} and plat nomor {plat_nomor} are associated with NIM {doc['nim']}")
+        else:
+            print(f"No document found with RFID {number} and plat nomor {plat_nomor}")
 
 #Namespace(detect_model=['weights/yolov7-lite-s.pt'], rec_model='weights/plate_rec.pth', source='imgs', img_size=640, output='result', kpt_label=4)
 # Create a label to display the video stream
@@ -67,7 +78,6 @@ while True:
     label.image = photo
     # Update the GUI window
     root.update()
-
 class Options:
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)

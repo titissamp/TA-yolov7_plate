@@ -6,6 +6,16 @@ import numpy as np
 from utils.general import bbox_iou
 from utils.torch_utils import is_parallel
 
+def int64_from_clipped_float64(x, dtype=np.int64):
+        assert x.dtype == np.float64
+
+        limits = np.iinfo(dtype)
+        too_small = x <= np.float64(limits.min)
+        too_large = x >= np.float64(limits.max)
+        ix = x.astype(dtype)
+        ix[too_small] = limits.min
+        ix[too_large] = limits.max
+        return ix
 
 def smooth_BCE(eps=0.1):  # https://github.com/ultralytics/yolov3/issues/238#issuecomment-598028441
     # return positive, negative label smoothing BCE targets
@@ -207,15 +217,16 @@ class ComputeLoss:
 
         loss = lbox + lobj + lcls + lkpt + lkptv
         return loss * bs, torch.cat((lbox, lobj, lcls, lkpt, lkptv, loss)).detach()
+    
 
     def build_targets(self, p, targets):
         # Build targets for compute_loss(), input targets(image,class,x,y,w,h)
         na, nt = self.na, targets.shape[0]  # number of anchors, targets
         tcls, tbox, tkpt, indices, anch = [], [], [], [], []
         if self.kpt_label:
-            gain = torch.ones(self.kpt_label*2+7, device=targets.device)  # normalized to gridspace gain
+            gain = torch.ones(self.kpt_label*2+7, device=targets.device).long()  # normalized to gridspace gain
         else:
-            gain = torch.ones(7, device=targets.device)  # normalized to gridspace gain
+            gain = torch.ones(7, device=targets.device).long()  # normalized to gridspace gain
         ai = torch.arange(na, device=targets.device).float().view(na, 1).repeat(1, nt)  # same as .repeat_interleave(nt)
         targets = torch.cat((targets.repeat(na, 1, 1), ai[:, :, None]), 2)  # append anchor indices
 

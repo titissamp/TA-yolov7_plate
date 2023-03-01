@@ -51,17 +51,17 @@ def train(hyp, opt, device, tb_writer=None):
     results_file = save_dir / 'results.txt'
 
     # Save run settings
-    with open(save_dir / 'hyp.yaml', 'w') as f:
+    with open(save_dir / 'hyp.yaml', 'w', encoding='utf-8') as f:
         yaml.safe_dump(hyp, f, sort_keys=False)
-    with open(save_dir / 'opt.yaml', 'w') as f:
+    with open(save_dir / 'opt.yaml', 'w', encoding='utf-8') as f:
         yaml.safe_dump(vars(opt), f, sort_keys=False)
 
     # Configure
     plots = not opt.evolve  # create plots
     cuda = device.type != 'cpu'
     init_seeds(2 + rank)
-    with open(opt.data) as f:
-        data_dict = yaml.safe_load(f)  # data dict
+    with open(opt.data, encoding='utf-8') as f:
+        data_dict = yaml.safe_load(f) # data dict
     is_coco = opt.data.endswith('coco.yaml')
 
     # Logging- Doing this before checking the dataset. Might update data_dict
