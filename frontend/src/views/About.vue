@@ -1,6 +1,7 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <f7-card
+    title="Penggunaan Gate Parking Otomatis"></f7-card>
   </div>
 </template>
 
