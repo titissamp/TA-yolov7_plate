@@ -6,8 +6,14 @@
         <v-sheet class="left-side">
           <v-flex d-flex xs12 sm6 md4>
             <v-card color="white" dark rounded="lg">
-              <v-card-title primary class="title">Pengguna Gate Parking Otomatis</v-card-title>
-              <v-card-subtitle primary class="subtitle">24 April 2023</v-card-subtitle>
+              <v-row no-gutters>
+                  <v-col>
+                    <v-card-title primary class="title">Pengguna Gate Parking Otomatis</v-card-title>
+                  </v-col>
+                  <v-col>
+                    <v-card-subtitle primary class="subtitle">24 April 2023</v-card-subtitle>
+                  </v-col>
+                </v-row>
               <v-row no-gutters>
                 <v-col>
                   <v-sheet class="info-masuk">
@@ -35,7 +41,60 @@
           <v-flex d-flex xs12 sm6 md4>
             <v-card color="white" dark rounded="lg">
               <v-card-title primary class="title">Status Gate Parking</v-card-title>
-              <v-card-text></v-card-text>
+                <v-row no-gutters>
+                  <v-col>
+                    <v-sheet class="gate-parking">
+                      Gate Masuk 1
+                    </v-sheet>
+                  </v-col>
+                  <v-col>
+                    <v-sheet class="status">
+                      Aktif
+                    </v-sheet>
+                  </v-col>
+
+                  <v-responsive width="100%"></v-responsive>
+
+                  <v-col>
+                    <v-sheet class="gate-parking">
+                      Gate Keluar 1
+                    </v-sheet>
+                  </v-col>
+
+                  <v-col>
+                    <v-sheet class="status">
+                      Aktif
+                    </v-sheet>
+                  </v-col>
+
+                  <v-responsive width="100%"></v-responsive>
+
+                  <v-col>
+                    <v-sheet class="gate-parking">
+                      Gate Masuk 2
+                    </v-sheet>
+                  </v-col>
+
+                  <v-col>
+                    <v-sheet class="status">
+                      Tidak Aktif
+                    </v-sheet>
+                  </v-col>
+
+                  <v-responsive width="100%"></v-responsive>
+
+                  <v-col>
+                    <v-sheet class="gate-parking">
+                      Gate Keluar 2
+                    </v-sheet>
+                  </v-col>
+
+                  <v-col>
+                    <v-sheet class="status">
+                      Tidak Aktif 
+                    </v-sheet>
+                  </v-col>
+                </v-row>
             </v-card>
           </v-flex>
         </v-sheet>
@@ -74,5 +133,36 @@ h1 {
 }
 .title{
   color: rgb(255, 136, 9)
+}
+.info-masuk{
+  margin-left: 16px;
+  margin-bottom: 16px;
+  text-align: center
+}
+.info-keluar{
+  margin-bottom: 16px;
+  text-align: center
+}
+.info-peringatan{
+  margin-right: 16px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+.gate-parking{
+  margin: 2px;
+  margin-left: 12px;
+  margin-bottom: 12px;
+}
+.status{
+  margin: 2px;
+  text-align: right;
+  margin-right: 12px;
+  margin-bottom: 12px
+}
+.subtitle{
+  text-align: right;
+  align: center;
+  justify-content: center;
+  margin-top: 16px;
 }
 </style>
