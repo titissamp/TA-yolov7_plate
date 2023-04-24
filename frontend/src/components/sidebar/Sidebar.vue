@@ -15,16 +15,13 @@ export default {
 <template>
   <div class="sidebar" :style="{ width: sidebarWidth }">
     <h3>
-      <img src="src/assets/polban.png">
       <span v-if="collapsed">
-        <div>G</div>
-        <div>P</div>
-        <div>O</div>
       </span>
       <span v-else>Gate Parking Otomatis</span>
+      <img src="assets/LOGO-POLBAN.jpeg">
     </h3>
 
-    <SidebarLink to="/" icon="fas fa-home">Overview</SidebarLink>
+    <SidebarLink to="/" img src="assets/home.svg">Overview</SidebarLink>
     <SidebarLink to="/dashboard" icon="fas fa-columns">Status</SidebarLink>
     <SidebarLink to="/analytics" icon="fas fa-chart-bar">Riwayat</SidebarLink>
   
@@ -43,13 +40,13 @@ export default {
 :root {
   --sidebar-bg-color:white;
   --sidebar-item-hover: rgb(255, 212, 41);
-  --sidebar-item-active: rgb(255, 136, 9);
+  --sidebar-item-active: rgb(245, 220, 129);
 }
 </style>
 
 <style scoped>
 .sidebar {
-  color: rgb(227, 122, 11);
+  color:  rgb(255, 136, 9);
   background-color: var(--sidebar-bg-color);
 
   float: left;
@@ -58,6 +55,7 @@ export default {
   top: 0;
   left: 0;
   bottom: 0;
+  padding-bottom: 100px;
   padding: 0.5em;
 
   transition: 0.3s ease;
@@ -76,7 +74,7 @@ export default {
   bottom: 0;
   padding: 0.75em;
 
-  color: black;
+  color: rgb(255, 136, 9);
 
   transition: 0.2s linear;
 }

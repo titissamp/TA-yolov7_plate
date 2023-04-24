@@ -44,7 +44,7 @@ export default {
 
   cursor: pointer;
   position: relative;
-  font-weight: 100;
+  font-weight: bold;
   user-select: none;
 
   margin: 0.1em 0;
@@ -52,7 +52,7 @@ export default {
   border-radius: 0.25em;
   height: 1.5em;
 
-  color: black;
+  color: rgb(255, 136, 9);
   text-decoration: none;
 }
 
