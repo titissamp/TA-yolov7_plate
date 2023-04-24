@@ -6,7 +6,8 @@
         <v-sheet class="left-side">
           <v-flex d-flex xs12 sm6 md4>
             <v-card color="white" dark rounded="lg">
-              <v-row no-gutters>
+              <div class="left-side-title">
+                <v-row no-gutters>
                   <v-col>
                     <v-card-title primary class="title">Pengguna Gate Parking Otomatis</v-card-title>
                   </v-col>
@@ -14,6 +15,7 @@
                     <v-card-subtitle primary class="subtitle">24 April 2023</v-card-subtitle>
                   </v-col>
                 </v-row>
+              </div>
               <v-row no-gutters>
                 <v-col>
                   <v-sheet class="info-masuk">
@@ -126,6 +128,9 @@ h1 {
   border: 1px;
   margin-left: 0px;
   padding-right: 20px;
+}
+.left-side-title{
+  margin-bottom: 20px;
 }
 .right-side{
   color: rgb(255, 136, 9);
