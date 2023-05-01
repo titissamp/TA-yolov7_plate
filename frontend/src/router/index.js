@@ -13,9 +13,9 @@ const routes = [
     component: () => import('../views/Dashboard.vue')
   },
   {
-    path: '/about',
-    name: 'About-menu',
-    component: () => import('../views/About.vue')
+    path: '/riwayat',
+    name: 'riwayat-menu',
+    component: () => import('../views/Riwayat.vue')
   }
 ]
 

@@ -23,7 +23,7 @@ export default {
 
     <SidebarLink to="/" img src="assets/home.svg">Overview</SidebarLink>
     <SidebarLink to="/dashboard" icon="fas fa-columns">Status</SidebarLink>
-    <SidebarLink to="/analytics" icon="fas fa-chart-bar">Riwayat</SidebarLink>
+    <SidebarLink to="/riwayat" icon="fas fa-chart-bar">Riwayat</SidebarLink>
   
 
     <span
