@@ -138,7 +138,7 @@ h1 {
 }
 .title{
   color: rgb(255, 136, 9);
-  text-align: center
+  text-align: left
 }
 .info-masuk{
   margin-left: 16px;
