@@ -1,9 +1,10 @@
 import cv2
+import base64
 import tkinter as tk
 from PIL import Image, ImageTk
 from detect_rec_plate_custom import main
 import argparse
-from server import *
+import requests,json
 
 # Initialize the video capture object
 cap = cv2.VideoCapture(0)
@@ -30,20 +31,29 @@ def capture_photo(number):
         label.config(image=photo)
         label.image = photo
         # Save the photo to a file
-        cv2.imwrite("imgs/photo2.jpg", frame)
-        opt = argparse.Namespace()
-        opt.detect_model = 'weights/yolov7-lite-s.pt'
-        opt.rec_model = 'weights/plate_rec.pth'
-        opt.source = 'imgs/photo2.jpg'
-        opt.img_size = 640
-        opt.output = 'result'
-        opt.kpt_label = 4
-        plat_nomor = main(opt)
-        doc = data_mahasiswa.find_one({"$and": [{"rfid": number}, {"plat_nomor": plat_nomor}]})
-        if doc:
-            print(f"RFID {number} and plat nomor {plat_nomor} are associated with NIM {doc['nim']}")
-        else:
-            print(f"No document found with RFID {number} and plat nomor {plat_nomor}")
+        cv2.imwrite("imgs/photo_temp.jpg", frame)
+        # Read the image file as bytes
+        with open('imgs/photo_temp.jpg', 'rb') as f:
+            encoded_image = base64.b64encode(f.read())
+
+        # Set the API endpoint URL
+        url = 'http://127.0.0.1:5000/identifikasi_keluar'
+
+        # Set the request headers
+        headers = {"Content-Type": "image/jpeg"}
+        
+        data = {
+            'photo': encoded_image.decode('utf-8'),
+            'filename': number
+        }
+
+
+        response = requests.post(url, json=data)
+
+        # Send the request
+        #response = requests.post(url, data=image_data, headers=headers)
+        print(response.text)
+
 
 #Namespace(detect_model=['weights/yolov7-lite-s.pt'], rec_model='weights/plate_rec.pth', source='imgs', img_size=640, output='result', kpt_label=4)
 # Create a label to display the video stream
@@ -72,6 +82,3 @@ while True:
     label.image = photo
     # Update the GUI window
     root.update()
-class Options:
-    def __init__(self, **kwargs):
-        self.__dict__.update(kwargs)
