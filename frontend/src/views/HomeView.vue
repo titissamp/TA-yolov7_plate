@@ -197,17 +197,28 @@
 </template>
 
 <script>
+import axios from 'axios'
   export default {
     data() {
       return {
         totalUsers: 500,
-        totalSales: 1000,
+        totalSales: 500,
         totalRevenue: 500,
         dialog: false,
         alertTitle: 'Peringatan',
         alertMessage: 'RFID dan Pelat Nomor tidak cocok di Gate Keluar, Mohon untuk ditindaklanjuti.'
       }
     },
+    mounted () {
+    axios
+      .get('http://www.omdbapi.com/?apikey=b76b385c&i=XXXXX&Content-Type=application/json')
+      .then(response => {
+        this.singleMovie = response.data
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  },
     methods: {
       showAlert() {
         this.dialog = true

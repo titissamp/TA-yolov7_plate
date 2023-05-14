@@ -52,13 +52,11 @@
               value: 'Nama',
             },
             { text: 'Status', value: 'Status' },
-            { text: 'Keterangan', value: 'Keterangan' },
           ],
           contents: [
             {
               Nama: 'Frozen Yogurt',
               Status: 159,
-              Keterangan: 'Terhubung',
             },
           ],
         }

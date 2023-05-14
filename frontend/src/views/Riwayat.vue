@@ -59,13 +59,10 @@
         </v-col>
       </v-row>
       <v-data-table
-      v-model="selected"
       :headers="headers"
       :items="contents"
       :single-select="singleSelect"
-      item-key="name"
       show-select
-      class="elevation-1"
       >
         <template v-slot:top>
           <v-switch
@@ -74,6 +71,16 @@
           class="pa-3"
           ></v-switch>
         </template>
+        <template v-slot:[`item.buktiMasuk`]="{item}">
+          <v-btn color="primary" @click="handleClick(item)">
+            Lihat Gambar
+          </v-btn>
+        </template>
+        <template v-slot:[`item.buktiKeluar`]="{item}">
+          <v-btn color="primary" @click="handleClick(item)">
+            Lihat Gambar
+          </v-btn>
+        </template>
       </v-data-table>
       </v-card>
       </v-col>
@@ -81,7 +88,6 @@
   </v-container>
 </template>
 <script>
-
 export default {
   name: 'status-page',
   data () {
@@ -105,18 +111,23 @@ export default {
         ],
         contents: [
           {
-            RFID: 'Frozen Yogurt',
-            pelatNomor: 159,
+            RFID: '19029374202',
+            pelatNomor: 'D 1234 YD',
             waktuMasuk: 6.0,
             waktuKeluar: 24,
-            buktiMasuk: 4.0,
-            buktiKeluar: 1,
-            status: 'aktif',
+            buktiMasuk: 'Lihat Gambar',
+            buktiKeluar: 'Lihat Gambar',
+            status: 1,
             action: 'icon'
           },
         ],
       }
     },
+    methods: {
+      handleClick(item) {
+        console.log(item)
+      }
+    }
 };
 </script>
 
