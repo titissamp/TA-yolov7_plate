@@ -193,12 +193,15 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <notification-component ref="notificationComponent"></notification-component>
   </v-container>
 </template>
 
 <script>
 import axios from 'axios'
-  export default {
+import NotificationComponent from './components/NotificationComponent.vue';
+
+  export default{
     data() {
       return {
         totalUsers: 500,
@@ -206,24 +209,25 @@ import axios from 'axios'
         totalRevenue: 500,
         dialog: false,
         alertTitle: 'Peringatan',
-        alertMessage: 'RFID dan Pelat Nomor tidak cocok di Gate Keluar, Mohon untuk ditindaklanjuti.'
+        alertMessage: 'RFID dan Pelat Nomor tidak cocok di Gate Keluar, Mohon untuk ditindaklanjuti.',
+        message: 'Hello, world!'
       }
     },
-    mounted () {
-    axios
-      .get('http://www.omdbapi.com/?apikey=b76b385c&i=XXXXX&Content-Type=application/json')
+    omponents: {
+    NotificationComponent
+  },
+  mounted() {
+    // Contoh panggilan API menggunakan Axios
+    axios.get('https://example.com/api/data')
       .then(response => {
-        this.singleMovie = response.data
+        // Notifikasi sukses jika data diterima
+        this.$refs.notificationComponent.showNotification('Data diterima.', 'success');
       })
       .catch(error => {
-        console.log(error)
-      })
-  },
-    methods: {
-      showAlert() {
-        this.dialog = true
-      }
-    }
+        // Notifikasi error jika ada kesalahan
+        this.$refs.notificationComponent.showNotification('Terjadi kesalahan.', 'error');
+      });
+  }
   }
   </script>
 
