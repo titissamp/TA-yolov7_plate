@@ -12,14 +12,23 @@ cap = cv2.VideoCapture(0)
 # Create the GUI window
 root = tk.Tk()
 root.title("Scan Plat Nomor")
+status = False
 def on_key_press(event):
+    global status
     number = entry.get()
-    capture_photo(number)
+    if status == False:
+        capture_photo(number)
+    else:
+        print("processing")
 # Define a function to capture a photo
 def capture_photo(number):
-    if len(number) >= 10:
+    global status
+    if (len(number) >= 10) and (status == False):
+        print("Masuk")
+        status = True
         #Read a frame from the video stream
         entry.delete(0, 10)
+        entry.pack_forget()
         ret, frame = cap.read()
         # Convert the frame to RGB format
         # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -53,7 +62,10 @@ def capture_photo(number):
         # Send the request
         #response = requests.post(url, data=image_data, headers=headers)
         print(response.text)
-
+        root.after(5000,entry.pack)
+        status = False
+    elif status == True:
+        print("Still processing")
 
 #Namespace(detect_model=['weights/yolov7-lite-s.pt'], rec_model='weights/plate_rec.pth', source='imgs', img_size=640, output='result', kpt_label=4)
 # Create a label to display the video stream

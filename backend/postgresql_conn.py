@@ -161,13 +161,17 @@ def get_mhs_data_by_rfid(rfid):
         cur = conn.cursor()
         
         # execute the SELECT query to retrieve RFID and Plat Nomor data from gateparking table
-        cur.execute("SELECT user_id, user_rfid, user_pelat FROM mahasiswa WHERE user_rfid = %s AND user_status = 0", (rfid))
+        cur.execute("SELECT user_id, user_rfid, user_pelat FROM mahasiswa WHERE user_rfid = %s AND user_status = %s", (rfid, 0))
         
         # fetch all the rows from the result set
         rows = cur.fetchall()
 
         # return the retrieved data
-        return rows
+        if len(rows) > 0:
+            #print(len(rows))
+            return rows
+        else:
+            return None
         
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -208,6 +212,44 @@ def get_mhs_data_by_id(id):
         # close the cursor and connection objects
         cur.close()
         conn.close()
+
+# Get data mhs by pelat nomor 
+def get_mhs_data_by_pelat(pelat):
+    try:
+        # establish a connection to the database
+        conn = psycopg2.connect(
+            host="localhost",
+            database="gateparking",
+            user="postgres",
+            password="postgres"
+        )
+
+        # create a cursor object
+        cur = conn.cursor()
+        
+        # execute the SELECT query to retrieve RFID and Plat Nomor data from gateparking table
+        cur.execute("SELECT user_id, user_rfid, user_pelat FROM mahasiswa WHERE user_pelat = %s AND user_status = %s", (pelat, 0))
+        
+        # fetch all the rows from the result set
+        rows = cur.fetchall()
+
+        # return the retrieved data
+        if len(rows) > 0:
+            #print(len(rows))
+            return rows
+        else:
+            return None
+        
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        return None
+        
+    finally:
+        # close the cursor and connection objects
+        cur.close()
+        conn.close()
+
+
 
 # Fungsi untuk menambahkan waktu masuk dan bukti masuk
 def add_riwayat_masuk(bukti_masuk, id_mhs):
@@ -346,5 +388,7 @@ if __name__ == '__main__':
     #res = update_riwayat_keluar("bukti_keluar/1.jpg")
     # rfid = "12345678903"
     # res = get_mhs_data_by_rfid(rfid, "D6280SAG")
-    res = get_jml_parkir()
+    #res = get_jml_parkir()
+    #mhs =  get_mhs_data_by_rfid("12345678906")
+    res = get_all_riwayat_parkir()
     print(res)

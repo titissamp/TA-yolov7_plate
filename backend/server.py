@@ -7,8 +7,19 @@ import cv2
 from identifikasi_plat import identifikasi_plat_nomor
 import os
 from datetime import datetime
+# import cloudinary
+# import cloudinary.uploader
+from PIL import Image
+import io
 
 app = Flask(__name__)
+# cloudinary.config(
+#   cloud_name = "jtk",
+#   api_key = "256473613645129",
+#   api_secret = "608g68rUKA13x6RFA3r5zfqVv5k"
+# )
+
+
 @app.route('/identifikasi_masuk', methods=['POST'])
 #
 # Requirement : Input = RFID & Gambar. => Identifikasi pelat nomor => Simpan di PostgreSQL
@@ -25,19 +36,35 @@ def identifikasi_masuk():
     # Save the image
     with open(f'data_riwayat/image_{filename}.jpg', 'wb') as f:
         f.write(image_data)
-    
-    # Identifikasi Pelat Nomor
     bukti_masuk = "data_riwayat/image_" + filename + ".jpg"
-    pelat = identifikasi_plat_nomor(bukti_masuk)
-    if pelat != None:
-        # Simpan di PostgreSQL
-        id_mhs = add_mhs_masuk(rfid, pelat)
-        result = add_riwayat_masuk(bukti_masuk, id_mhs)
-        
-        return jsonify({'message': result})
+    # Cek RFID sedang digunakan/tidak
+    mhs =  get_mhs_data_by_rfid(rfid)
+    #print("MAhasiswa:")
+    #print(mhs)
+    if mhs == None:
+        # Jika rfid tdk digunakan maka lanjut cek pelat
+        # Identifikasi Pelat Nomor
+        pelat = identifikasi_plat_nomor(bukti_masuk)        
+        if pelat != None:
+            # Pelat telah ada
+            is_pelat = get_mhs_data_by_pelat(pelat)
+            if is_pelat == None:
+                id_mhs = add_mhs_masuk(rfid, pelat)
+                result = add_riwayat_masuk(bukti_masuk, id_mhs)
+                code = 200
+            else:
+                result = "Pelat telah terdaftar"
+                code = 500
+        else:
+            # Pelat tidak terdeteksi
+            os.remove(bukti_masuk)
+            code = 504
+            result = "error pelat tidak terdeteksi"
     else:
-        print("error")
-        return jsonify({'error': "error pelat tidak terdeteksi"})
+        os.remove(bukti_masuk)
+        code = 501
+        result = "RFID telah dipakai"
+    return jsonify({'message': result, 'code' : code})
 
 @app.route('/identifikasi_keluar', methods=['POST'])
 #
@@ -58,25 +85,42 @@ def identifikasi_keluar():
     
     # Identifikasi Pelat Nomor
     bukti_keluar = "data_riwayat/image_" + filename + ".jpg"
-    pelat = identifikasi_plat_nomor(bukti_keluar)
-    if pelat != None:
-        # Cocokkan dengan yang ada di PostgreSQL
-        mhs =  get_mhs_data_by_rfid(rfid)
-        if mhs != None:
-            if mhs[0][1] == pelat:
+    mhs =  get_mhs_data_by_rfid(rfid)
+    if mhs != None:
+        # Jika ada mhs di database dengan RFID tsb
+        pelat = identifikasi_plat_nomor(bukti_keluar)
+        if pelat != None:
+            # Kalo plat terdeteksi
+            print(mhs[0][2])
+            if mhs[0][2] == pelat:
+                # Kalo pelat sama
                 status = 1
                 id_mhs = update_mhs_keluar(rfid, status)
+                code = 200
+                result = update_riwayat_keluar(bukti_keluar, id_mhs)
             else:
+                # Kalo pelat beda
                 send_alert()
-                #Simpan dgn status 2 jika keluar
+                
+                #Simpan dgn status 2 jika pelat berbeda
                 status = 2
                 id_mhs = update_mhs_keluar(rfid, status)
-            result = update_riwayat_keluar(bukti_keluar, id_mhs)
-            return jsonify({'message': "Mahasiswa keluar dengan penahanan KTM/KTP"})
+                os.remove(bukti_keluar)
+                code = 501
+                result = "Pelat nomor berbeda"
+            
+            #return jsonify({'message': result, 'code' : code})
         else :
-            return jsonify({'error': "Error RFID belum terdaftar masuk"})
+            # Pelat tidak terdeteksi
+            os.remove(bukti_keluar)
+            result = "Error pelat tidak terdeteksi"
+            code = 504
     else:
-        return jsonify({'error': "Error pelat tidak terdeteksi"})
+        # Jika tdk ada mhs dengan RFID tersebut
+        os.remove(bukti_keluar)
+        code = 501
+        result = "RFID belum terdaftar"
+    return jsonify({'message': result, 'code' : code})
 
 @app.route('/get_riwayat_parkir', methods=['GET'])
 #
@@ -87,18 +131,18 @@ def get_riwayat_parkir():
     data = get_all_riwayat_parkir()
     return jsonify({data})
 
-@app.route('/get_gate_status', methods=['GET'])
+@app.route('/get_riwayat_count', methods=['GET'])
 #
 # Requirement : Input = - 
 #               Output = Record riwayat parkir
 # 
-def get_gate_status():
-    data = request.get_json()
-    gate_id = data['gate_id']
-    return jsonify({'gate_id': gate_id})
+def get_riwayat_count():
+    data = get_jml_parkir()
+    return jsonify({'data': data})
 
 def send_alert():
     return 1
+
 
 if __name__ == '__main__':
     app.run(debug=True)

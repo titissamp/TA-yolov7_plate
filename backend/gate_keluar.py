@@ -2,8 +2,6 @@ import cv2
 import base64
 import tkinter as tk
 from PIL import Image, ImageTk
-from detect_rec_plate_custom import main
-import argparse
 import requests,json
 
 # Initialize the video capture object
@@ -12,17 +10,19 @@ cap = cv2.VideoCapture(0)
 # Create the GUI window
 root = tk.Tk()
 root.title("Scan Plat Nomor")
+status = 0
 def on_key_press(event):
     number = entry.get()
     capture_photo(number)
 # Define a function to capture a photo
 def capture_photo(number):
-    if len(number) >= 10:
+    if (len(number) >= 10) and status == 0:
+        status = 1
         #Read a frame from the video stream
         entry.delete(0, 10)
         ret, frame = cap.read()
         # Convert the frame to RGB format
-        # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         # Convert the frame to a PIL ImageTk object
         frame = cv2.flip(frame, 1)
         image = Image.fromarray(frame)
@@ -40,7 +40,7 @@ def capture_photo(number):
         url = 'http://127.0.0.1:5000/identifikasi_keluar'
 
         # Set the request headers
-        headers = {"Content-Type": "image/jpeg"}
+        # headers = {"Content-Type": "image/jpeg"}
         
         data = {
             'photo': encoded_image.decode('utf-8'),
@@ -53,6 +53,7 @@ def capture_photo(number):
         # Send the request
         #response = requests.post(url, data=image_data, headers=headers)
         print(response.text)
+        status = 0
 
 
 #Namespace(detect_model=['weights/yolov7-lite-s.pt'], rec_model='weights/plate_rec.pth', source='imgs', img_size=640, output='result', kpt_label=4)
