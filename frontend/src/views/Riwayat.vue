@@ -130,6 +130,15 @@ export default {
         try {
           const response = await axios.get('https://e9179eef-d911-4647-9916-282dd1369fea.mock.pstmn.io/get_Riwayat'); // Ganti '/api/endpoint' dengan URL API yang sesuai
           this.content = response.data;
+          // const list = response.data.data
+          // const regex = /^(\d{4})(\d{3})(\d{4})$/;
+          // const mappedMahasiswa = list.map((item) => ({
+          //   NIM: item.NIM,
+          //   nama: item.nama,
+          //   email: item.email,
+          //   id_KoTA : item.id_KoTA ? item.id_KoTA.replace(regex, "$2-$1/$3") : null
+          // }));
+          // this.mahasiswa = mappedMahasiswa
         } catch (error) {
           console.error(error);
         }
