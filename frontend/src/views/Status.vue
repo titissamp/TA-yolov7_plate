@@ -55,8 +55,8 @@
           ],
           contents: [
             {
-              Nama: 'Frozen Yogurt',
-              Status: 159,
+              Nama: 'Gate Keluar',
+              Status: 'Aktif',
             },
           ],
         }

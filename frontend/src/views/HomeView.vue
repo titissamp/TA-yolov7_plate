@@ -40,12 +40,10 @@
                   <div class="headline white--text">
                     <v-icon
                     large
-                    color="white">
-                      mdi-import
-                    </v-icon>
+                    color="white"> mdi-import </v-icon>
                     Masuk
                   </div>
-                  <div class="display-4 white--text">{{ totalUsers }}</div>
+                  <div class="text-h2 white--text">{{ totalMasuk }}</div>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -55,12 +53,10 @@
                   <div class="headline white--text">
                     <v-icon
                     large
-                    color="white">
-                      mdi-export
-                    </v-icon>
+                    color="white"> mdi-export </v-icon>
                     Keluar
                   </div>
-                  <div class="display-4 white--text">{{ totalSales }}</div>
+                  <div class="text-h2 white--text">{{ totalKeluar }}</div>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -70,12 +66,10 @@
                   <div class="headline white--text">
                     <v-icon
                     large
-                    color="white">
-                      mdi-alert-outline
-                    </v-icon>
+                    color="white"> mdi-alert-outline </v-icon>
                     Peringatan
                   </div>
-                  <div class="display-4 white--text">{{ totalRevenue }}</div>
+                  <div class="text-h2 white--text">{{ totalPeringatan }}</div>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -199,35 +193,50 @@
 
 <script>
 import axios from 'axios'
-import NotificationComponent from './components/NotificationComponent.vue';
 
   export default{
     data() {
       return {
-        totalUsers: 500,
-        totalSales: 500,
-        totalRevenue: 500,
+        totalMasuk: [],
+        totalKeluar: [],
+        totalPeringatan: [],
         dialog: false,
         alertTitle: 'Peringatan',
         alertMessage: 'RFID dan Pelat Nomor tidak cocok di Gate Keluar, Mohon untuk ditindaklanjuti.',
         message: 'Hello, world!'
       }
     },
-    omponents: {
-    NotificationComponent
-  },
-  mounted() {
-    // Contoh panggilan API menggunakan Axios
-    axios.get('https://example.com/api/data')
-      .then(response => {
-        // Notifikasi sukses jika data diterima
-        this.$refs.notificationComponent.showNotification('Data diterima.', 'success');
-      })
-      .catch(error => {
-        // Notifikasi error jika ada kesalahan
-        this.$refs.notificationComponent.showNotification('Terjadi kesalahan.', 'error');
-      });
-  }
+    mounted() {
+      this.getDataJumlahMasuk();
+      this.getDataJumlahKeluar();
+      this.getDataJumlahPeringatan();
+    },
+    methods: {
+      async getDataJumlahMasuk() {
+      try {
+        const response = await axios.get('https://e9179eef-d911-4647-9916-282dd1369fea.mock.pstmn.io/get_totalMasuk'); // Ganti '/api/endpoint' dengan URL API yang sesuai
+        this.totalMasuk = response.data; // Simpan respons API ke variabel data
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async getDataJumlahKeluar() {
+      try {
+        const response = await axios.get('https://e9179eef-d911-4647-9916-282dd1369fea.mock.pstmn.io/get_totalKeluar'); // Ganti '/api/endpoint' dengan URL API yang sesuai
+        this.totalKeluar = response.data; // Simpan respons API ke variabel data
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async getDataJumlahPeringatan() {
+      try {
+        const response = await axios.get('https://e9179eef-d911-4647-9916-282dd1369fea.mock.pstmn.io/get_totalPeringatan'); // Ganti '/api/endpoint' dengan URL API yang sesuai
+        this.totalPeringatan = response.data; // Simpan respons API ke variabel data
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    }
   }
   </script>
 
@@ -235,6 +244,7 @@ import NotificationComponent from './components/NotificationComponent.vue';
 .title{
   color: orange;
   font-display: bold;
+  font-size: x-large;
   
 }
 .modalTitle{

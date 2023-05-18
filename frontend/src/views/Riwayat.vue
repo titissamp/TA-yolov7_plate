@@ -60,9 +60,7 @@
       </v-row>
       <v-data-table
       :headers="headers"
-      :items="contents"
-      :single-select="singleSelect"
-      show-select
+      :items="content"
       >
         <template v-slot:top>
           <v-switch
@@ -71,7 +69,7 @@
           class="pa-3"
           ></v-switch>
         </template>
-        <template v-slot:[`item.buktiMasuk`]="{item}">
+        <!-- <template v-slot:[`item.buktiMasuk`]="{item}">
           <v-btn color="primary" @click="handleClick(item)">
             Lihat Gambar
           </v-btn>
@@ -80,19 +78,22 @@
           <v-btn color="primary" @click="handleClick(item)">
             Lihat Gambar
           </v-btn>
-        </template>
+        </template> -->
       </v-data-table>
       </v-card>
       </v-col>
     </v-row>
   </v-container>
 </template>
+
 <script>
+import axios from 'axios'
 export default {
   name: 'status-page',
   data () {
       return {
         singleSelect: false,
+        content:[],
         selected: [],
         headers: [
           {
@@ -107,7 +108,6 @@ export default {
           { text: 'Bukti Masuk', value: 'buktiMasuk' },
           { text: 'Bukti Keluar', value: 'buktiKeluar' },
           { text: 'Status', value: 'status' },
-          { text: 'Action', value: 'actioin' },
         ],
         contents: [
           {
@@ -117,18 +117,28 @@ export default {
             waktuKeluar: 24,
             buktiMasuk: 'Lihat Gambar',
             buktiKeluar: 'Lihat Gambar',
-            status: 1,
-            action: 'icon'
+            status: 1
           },
         ],
       }
     },
+    mounted() {
+    this.getDataRiwayat();
+    },
     methods: {
+      async getDataRiwayat() {
+        try {
+          const response = await axios.get('https://e9179eef-d911-4647-9916-282dd1369fea.mock.pstmn.io/get_Riwayat'); // Ganti '/api/endpoint' dengan URL API yang sesuai
+          this.content = response.data;
+        } catch (error) {
+          console.error(error);
+        }
+      },
       handleClick(item) {
         console.log(item)
       }
     }
-};
+  }
 </script>
 
 <style scoped>
