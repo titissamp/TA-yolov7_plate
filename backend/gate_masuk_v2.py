@@ -5,6 +5,24 @@ from PIL import Image, ImageTk
 from detect_rec_plate_custom import main
 import time
 import requests,json
+import cloudinary
+import cloudinary.uploader
+import io
+import os 
+
+def upload_file(filename):
+
+  cloudinary.config(
+    cloud_name = "jtk",
+    api_key = "256473613645129",
+    api_secret = "608g68rUKA13x6RFA3r5zfqVv5k"
+  )
+  image = Image.open(filename)
+  with io.BytesIO() as output:
+        image.save(output, format='JPEG')
+        image_data = output.getvalue()
+  response = cloudinary.uploader.upload(image_data)
+  return response['url']
 
 def capture_photo():
     # Open default camera
@@ -30,15 +48,16 @@ def capture_photo():
     filename = "photo.jpg"
     #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     frame = cv2.flip(frame, 1)
-    cv2.imwrite(filename, frame)
+    
     # Save the photo to a file
-    cv2.imwrite("imgs/photo_temp.jpg", frame)
+    cv2.imwrite(filename, frame)
+
     # Read the image file as bytes
-    with open('imgs/photo_temp.jpg', 'rb') as f:
+    with open(filename, 'rb') as f:
         encoded_image = base64.b64encode(f.read())
 
     # Set the API endpoint URL
-    url = 'http://127.0.0.1:5000/identifikasi_masuk'
+    url = 'http://127.0.0.1:6009/identifikasi_masuk'
 
     # Set the request headers
     headers = {"Content-Type": "image/jpeg"}
@@ -54,6 +73,17 @@ def capture_photo():
     # Send the request
     #response = requests.post(url, data=image_data, headers=headers)
     print(response)
+    if(response['code'] == 200):
+        #print(response['user_id'])
+        #print("ini urlnya: " + upload_file(filename))
+        data_bukti = {
+            'bukti_masuk' : upload_file(filename),
+            'user_id' : response['user_id']
+        }
+        url_bukti = 'http://127.0.0.1:6009/update_bukti_masuk'
+        response = requests.post(url_bukti, json=data_bukti)
+    
+    os.remove(filename)
 
 # Main loop
 while True:
@@ -73,3 +103,4 @@ while True:
         print("Invalid input, please enter a number or 0 to exit")
 
 # RFID test = 12345678901
+

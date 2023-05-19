@@ -252,7 +252,7 @@ def get_mhs_data_by_pelat(pelat):
 
 
 # Fungsi untuk menambahkan waktu masuk dan bukti masuk
-def add_riwayat_masuk(bukti_masuk, id_mhs):
+def add_riwayat_masuk_with_bukti(bukti_masuk, id_mhs):
     try:
         # Connect to the PostgreSQL database
         conn = psycopg2.connect(
@@ -285,8 +285,74 @@ def add_riwayat_masuk(bukti_masuk, id_mhs):
         conn.rollback()
         return f"Error while saving new riwayat to database: {error}"
 
+# Menambah riwayat masuk hanya id tanpa bukti
+def add_riwayat_masuk(id_mhs):
+    try:
+        # Connect to the PostgreSQL database
+        conn = psycopg2.connect(
+            host="localhost",
+            database="gateparking",
+            user="postgres",
+            password="postgres"
+        )
+        
+        # Create a cursor object
+        cur = conn.cursor()
+        
+        now = datetime.now() # Create timestamp
+
+        # Execute the SQL query to insert the text into the database
+        cur.execute("INSERT INTO riwayat_parkir (waktu_masuk, user_user_id) VALUES (%s, %s)", (now, id_mhs))
+        
+        # Commit the transaction
+        conn.commit()
+        
+        # Close the cursor and connection objects
+        cur.close()
+        conn.close()
+        
+        # Return a success message
+        return "Mhs and Riwayat saved to database successfully"
+    
+    except (Exception, psycopg2.DatabaseError) as error:
+        # If an error occurs, rollback the transaction and return an error message
+        conn.rollback()
+        return f"Error while saving new riwayat to database: {error}"
+
+#Update bukti masuk dari link cloudinary
+def update_bukti_masuk(bukti_masuk, user_id):
+    try:
+        # Connect to the PostgreSQL database
+        conn = psycopg2.connect(
+            host="localhost",
+            database="gateparking",
+            user="postgres",
+            password="postgres"
+        )
+        
+        # Create a cursor object
+        cur = conn.cursor()
+
+        # Execute the SQL query to insert the text into the database
+        cur.execute("UPDATE riwayat_parkir SET bukti_masuk = %s WHERE user_user_id = %s", (bukti_masuk, user_id))
+        
+        # Commit the transaction
+        conn.commit()
+        
+        # Close the cursor and connection objects
+        cur.close()
+        conn.close()
+        
+        # Return a success message
+        return "Bukti masuk URL saved to database successfully"
+    
+    except (Exception, psycopg2.DatabaseError) as error:
+        # If an error occurs, rollback the transaction and return an error message
+        conn.rollback()
+        return f"Error while saving new riwayat to database: {error}"
+
 # Fungsi untuk menambahkan waktu keluar dan bukti keluar
-def update_riwayat_keluar(bukti_keluar, user_id):
+def update_riwayat_keluar_with_bukti(bukti_keluar, user_id):
     try:
         # Connect to the PostgreSQL database
         conn = psycopg2.connect(
@@ -312,13 +378,79 @@ def update_riwayat_keluar(bukti_keluar, user_id):
         conn.close()
         
         # Return a success message
-        return "Text saved to database successfully"
+        return "Mhs saved to database successfully"
     
     except (Exception, psycopg2.DatabaseError) as error:
         # If an error occurs, rollback the transaction and return an error message
         conn.rollback()
         return f"Error while saving new riwayat to database: {error}"
+
+# Update riwayat keluar tanpa bukti
+def update_riwayat_keluar(user_id):
+    try:
+        # Connect to the PostgreSQL database
+        conn = psycopg2.connect(
+            host="localhost",
+            database="gateparking",
+            user="postgres",
+            password="postgres"
+        )
         
+        # Create a cursor object
+        cur = conn.cursor()
+        
+        now = datetime.now() # Create timestamp
+
+        # Execute the SQL query to insert the text into the database
+        cur.execute("UPDATE riwayat_parkir SET waktu_keluar = %s WHERE user_user_id = %s", ( now, user_id))
+        
+        # Commit the transaction
+        conn.commit()
+        
+        # Close the cursor and connection objects
+        cur.close()
+        conn.close()
+        
+        # Return a success message
+        return "Mhs saved to database successfully"
+    
+    except (Exception, psycopg2.DatabaseError) as error:
+        # If an error occurs, rollback the transaction and return an error message
+        conn.rollback()
+        return f"Error while saving new riwayat to database: {error}"
+
+# tambah bukti keluar
+def update_bukti_keluar(bukti_keluar, user_id):
+    try:
+        # Connect to the PostgreSQL database
+        conn = psycopg2.connect(
+            host="localhost",
+            database="gateparking",
+            user="postgres",
+            password="postgres"
+        )
+        
+        # Create a cursor object
+        cur = conn.cursor()
+
+        # Execute the SQL query to insert the text into the database
+        cur.execute("UPDATE riwayat_parkir SET bukti_keluar = %s WHERE user_user_id = %s", (bukti_keluar, user_id))
+        
+        # Commit the transaction
+        conn.commit()
+        
+        # Close the cursor and connection objects
+        cur.close()
+        conn.close()
+        
+        # Return a success message
+        return "Bukti keluar URL saved to database successfully"
+    
+    except (Exception, psycopg2.DatabaseError) as error:
+        # If an error occurs, rollback the transaction and return an error message
+        conn.rollback()
+        return f"Error while saving new riwayat to database: {error}"
+
 def get_all_riwayat_parkir():
     try:
         # Connect to the PostgreSQL database
@@ -390,5 +522,5 @@ if __name__ == '__main__':
     # res = get_mhs_data_by_rfid(rfid, "D6280SAG")
     #res = get_jml_parkir()
     #mhs =  get_mhs_data_by_rfid("12345678906")
-    res = get_all_riwayat_parkir()
+    res = update_bukti_keluar("https://res.cloudinary.com/jtk/image/upload/v1684497128/gwqd188isqicobc4yqc5.jpg", 52)
     print(res)

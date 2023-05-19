@@ -7,7 +7,7 @@ import cv2
 from identifikasi_plat import identifikasi_plat_nomor
 import os
 from datetime import datetime
-# import cloudinary
+import cloudinary
 # import cloudinary.uploader
 from PIL import Image
 import io
@@ -50,8 +50,10 @@ def identifikasi_masuk():
             is_pelat = get_mhs_data_by_pelat(pelat)
             if is_pelat == None:
                 id_mhs = add_mhs_masuk(rfid, pelat)
-                result = add_riwayat_masuk(bukti_masuk, id_mhs)
+                #result = add_riwayat_masuk_with_bukti(bukti_masuk, id_mhs)
+                result = add_riwayat_masuk(id_mhs)
                 code = 200
+                return jsonify({'message': result, 'code': code, 'user_id' : id_mhs})
             else:
                 result = "Pelat telah terdaftar"
                 code = 500
@@ -97,11 +99,11 @@ def identifikasi_keluar():
                 status = 1
                 id_mhs = update_mhs_keluar(rfid, status)
                 code = 200
-                result = update_riwayat_keluar(bukti_keluar, id_mhs)
+                #result = update_riwayat_keluar_with_bukti(bukti_keluar, id_mhs)
+                result = update_riwayat_keluar(id_mhs)
+                return jsonify({'message': result, 'code': code, 'user_id' : id_mhs})
             else:
                 # Kalo pelat beda
-                send_alert()
-                
                 #Simpan dgn status 2 jika pelat berbeda
                 status = 2
                 id_mhs = update_mhs_keluar(rfid, status)
@@ -129,7 +131,7 @@ def identifikasi_keluar():
 # 
 def get_riwayat_parkir():
     data = get_all_riwayat_parkir()
-    return jsonify({data})
+    return data
 
 @app.route('/get_riwayat_count', methods=['GET'])
 #
@@ -140,9 +142,28 @@ def get_riwayat_count():
     data = get_jml_parkir()
     return jsonify({'data': data})
 
-def send_alert():
-    return 1
+# Update riwayat untuk menambahkan bukti masuk
+@app.route('/update_bukti_masuk', methods=['POST'])
+def update_mhs_bukti_masuk():
+    data = request.get_json()
+    bukti_masuk = data['bukti_masuk']
+    user_id = data['user_id']
+    print("data:")
+    print(bukti_masuk)
+    print(user_id)
+    return update_bukti_masuk(bukti_masuk, user_id)
+
+# Update riwayat untuk menambahkan bukti keluar
+@app.route('/update_bukti_keluar', methods=['POST'])
+def update_mhs_bukti_keluar():
+    data = request.get_json()
+    bukti_keluar = data['bukti_keluar']
+    user_id = data['user_id']
+    print("data:")
+    print(bukti_keluar)
+    print(user_id)
+    return update_bukti_keluar(bukti_keluar, user_id)
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=6009)
