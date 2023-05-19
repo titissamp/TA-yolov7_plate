@@ -142,6 +142,24 @@ def get_riwayat_count():
     data = get_jml_parkir()
     return jsonify({'data': data})
 
+@app.route('/get_keluar_count', methods=['GET'])
+#
+# Requirement : Input = - 
+#               Output = Record riwayat parkir
+# 
+def get_keluar_count():
+    data = get_jml_keluar_parkir()
+    return jsonify({'data': data})
+
+@app.route('/get_problem_count', methods=['GET'])
+#
+# Requirement : Input = - 
+#               Output = Record riwayat parkir
+# 
+def get_problem_count():
+    data = get_jml_problem_parkir()
+    return jsonify({'data': data})
+
 # Update riwayat untuk menambahkan bukti masuk
 @app.route('/update_bukti_masuk', methods=['POST'])
 def update_mhs_bukti_masuk():

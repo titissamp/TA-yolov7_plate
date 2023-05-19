@@ -509,11 +509,77 @@ def get_jml_parkir():
         
         # Return a success message
         return result
+    except (Exception, psycopg2.DatabaseError) as error:
+        # If an error occurs, rollback the transaction and return an error message
+        conn.rollback()
+        return f"Error while saving new riwayat to database: {error}"
+
+def get_jml_keluar_parkir():
+    try:
+        # Connect to the PostgreSQL database
+        conn = psycopg2.connect(
+            host="localhost",
+            database="gateparking",
+            user="postgres",
+            password="postgres"
+        )
+        
+        # Create a cursor object
+        cur = conn.cursor()
+        
+        now = datetime.now() # Create timestamp
+
+        # Execute the SQL query to insert the text into the database
+        cur.execute("SELECT COUNT(*) FROM mahasiswa WHERE user_status = 1")
+
+        
+        result = cur.fetchone()[0]
+        
+        # Close the cursor and connection objects
+        cur.close()
+        conn.close()
+        
+        # Return a success message
+        return result
     
     except (Exception, psycopg2.DatabaseError) as error:
         # If an error occurs, rollback the transaction and return an error message
         conn.rollback()
         return f"Error while saving new riwayat to database: {error}"
+
+def get_jml_problem_parkir():
+    try:
+        # Connect to the PostgreSQL database
+        conn = psycopg2.connect(
+            host="localhost",
+            database="gateparking",
+            user="postgres",
+            password="postgres"
+        )
+        
+        # Create a cursor object
+        cur = conn.cursor()
+        
+        now = datetime.now() # Create timestamp
+
+        # Execute the SQL query to insert the text into the database
+        cur.execute("SELECT COUNT(*) FROM mahasiswa WHERE user_status = 2")
+
+        
+        result = cur.fetchone()[0]
+        
+        # Close the cursor and connection objects
+        cur.close()
+        conn.close()
+        
+        # Return a success message
+        return result
+    
+    except (Exception, psycopg2.DatabaseError) as error:
+        # If an error occurs, rollback the transaction and return an error message
+        conn.rollback()
+        return f"Error while saving new riwayat to database: {error}"
+
 if __name__ == '__main__':
     #res = add_mhs(12345678901, "D 6280 SAG")]
     #res = update_mhs_keluar("12345678901", 1)
@@ -522,5 +588,6 @@ if __name__ == '__main__':
     # res = get_mhs_data_by_rfid(rfid, "D6280SAG")
     #res = get_jml_parkir()
     #mhs =  get_mhs_data_by_rfid("12345678906")
-    res = update_bukti_keluar("https://res.cloudinary.com/jtk/image/upload/v1684497128/gwqd188isqicobc4yqc5.jpg", 52)
+    #res = update_bukti_keluar("https://res.cloudinary.com/jtk/image/upload/v1684497128/gwqd188isqicobc4yqc5.jpg", 52)
+    res = get_jml_problem_parkir()
     print(res)
