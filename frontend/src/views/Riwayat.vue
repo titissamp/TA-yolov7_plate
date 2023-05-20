@@ -1,9 +1,6 @@
 <template>
   <v-container class="grey lighten-5">
-  <v-row>
-    <v-col
-    >
-      <v-card
+    <v-card
         class="left-side"
         outlined
         tile
@@ -12,7 +9,8 @@
 
       <v-data-table
       :headers="headers"
-      :items="content"
+      :items="items"
+      class="elevation-1 pl-4 pr-4"
       >
         <!-- <template v-slot:top>
           <v-switch
@@ -21,31 +19,35 @@
           class="pa-3"
           ></v-switch>
         </template> -->
-        <template v-slot:[`item.buktiMasuk`]="{item}">
-          <v-btn color="primary" @click="handleClick(item)">
+        <template v-slot:[`item.BuktiMasuk`]="{ item }">
+          <v-btn color="primary" @click="openDialog(item.BuktiMasuk)">
             Lihat Gambar
           </v-btn>
         </template>
-        <template v-slot:[`item.buktiKeluar`]="{item}">
-          <v-btn color="primary" @click="handleClick(item)">
+        <template v-slot:[`item.BuktiKeluar`]="{item}">
+          <v-btn color="primary" @click="openDialog(item.BuktiKeluar)">
             Lihat Gambar
           </v-btn>
         </template>
       </v-data-table>
-      </v-card>
-      </v-col>
-    </v-row>
+      <v-dialog v-model="dialogVisible" max-width="500px">
+        <v-img :src="popupLink" width="100%"></v-img>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="closeDialog">Tutup</v-btn>
+        </v-card-actions>
+      </v-dialog>
+    </v-card>
   </v-container>
 </template>
 
 <script>
 import axios from 'axios'
 export default {
-  name: 'status-page',
-  data () {
+  name: 'riwayat-page',
+  data() {
       return {
         // singleSelect: false,
-        content:[],
         // selected: [],
         headers: [
           {
@@ -54,13 +56,16 @@ export default {
             sortable: false,
             value: 'RFID',
           },
-          { text: 'Pelat Nomor', value: 'pelatNomor' },
-          { text: 'Waktu Masuk', value: 'waktuMasuk' },
-          { text: 'Bukti Masuk', value: 'buktiMasuk' },
-          { text: 'Waktu Keluar', value: 'waktuKeluar' },
-          { text: 'Bukti Keluar', value: 'buktiKeluar' },
-          { text: 'Status', value: 'status' },
+          { text: 'Pelat Nomor', value: 'PelatNomor' },
+          { text: 'Waktu Masuk', value: 'WaktuMasuk' },
+          { text: 'Bukti Masuk', value: 'BuktiMasuk', sortable: false, },
+          { text: 'Waktu Keluar', value: 'WaktuKeluar' },
+          { text: 'Bukti Keluar', value: 'BuktiKeluar', sortable: false, },
+          { text: 'Status', value: 'Status' },
         ],
+        items: [],
+        dialogVisible: false,
+        popupLink: ''
       }
     },
 
@@ -73,26 +78,31 @@ export default {
       async getDataRiwayat() {
         try {
           const response = await axios.get('http://localhost:8080/get_riwayat_parkir'); // Ganti '/api/endpoint' dengan URL API yang sesuai
-          this.content = response.data;
-          // const list = response.data.data
-          // const regex = /^(\d{4})(\d{3})(\d{4})$/;
-          // const mappedRiwayat = list.map((item) => ({
-          //   RFID: item.RFID,
-          //   PelatNomor: item.pelatNomor,
-          //   WaktuMasuk: item.waktuMasuk,
-          //   BuktiMasuk: item.buktiMasuk,
-          //   WaktuKeluar: item.waktuKeluar,
-          //   BuktiKeluar: item.buktiKeluar,
-          //   Status: item.status
-          // }));
-          // this.content = mappedRiwayat
+          // this.items = response.data;
+          const list = response.data
+          const mappedRiwayat = list.map((item) => ({
+            BuktiKeluar: item[2],
+            BuktiMasuk: item[0],
+            PelatNomor: item[4],
+            RFID: item[5],
+            Status: item[6],
+            WaktuKeluar: item[3],
+            WaktuMasuk: item[1],
+          }));
+          this.items = mappedRiwayat
+          console.log(response)
         } catch (error) {
           console.error(error);
         }
       },
-      handleClick(item) {
-        console.log(item)
-      }
+      openDialog(item) {
+        this.popupLink = item;
+        this.dialogVisible = true;
+      },
+      closeDialog() {
+      this.dialogVisible = false;
+      this.popupLink = '';
+    }
     }
   }
 </script>
