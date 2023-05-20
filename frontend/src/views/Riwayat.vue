@@ -1,24 +1,26 @@
 <template>
   <v-container class="grey lighten-5">
     <v-card
-        class="left-side"
-        outlined
-        tile
-      >
-        <v-card-title class="title">Riwayat Pengguna Gedung Parkir Polteknik Negeri Bandung</v-card-title>
-
+    class="left-side"
+    outlined
+    tile
+    >
+      <v-card-title class="title">
+          Riwayat Pengguna Gedung Parkir Politeknik Negeri Bandung
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Cari Status"
+          outlined
+          dense
+        ></v-text-field>
+      </v-card-title>
       <v-data-table
       :headers="headers"
-      :items="items"
+      :items="filteredData"
       class="elevation-1 pl-4 pr-4"
       >
-        <!-- <template v-slot:top>
-          <v-switch
-          v-model="singleSelect"
-          label="Single select"
-          class="pa-3"
-          ></v-switch>
-        </template> -->
         <template v-slot:[`item.BuktiMasuk`]="{ item }">
           <v-btn color="primary" @click="openDialog(item.BuktiMasuk)">
             Lihat Gambar
@@ -30,7 +32,7 @@
           </v-btn>
         </template>
       </v-data-table>
-      <v-dialog v-model="dialogVisible" max-width="500px">
+      <v-dialog v-model="dialogVisible" max-width="800px">
         <v-img :src="popupLink" width="100%"></v-img>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -47,8 +49,6 @@ export default {
   name: 'riwayat-page',
   data() {
       return {
-        // singleSelect: false,
-        // selected: [],
         headers: [
           {
             text: 'RFID',
@@ -56,22 +56,23 @@ export default {
             sortable: false,
             value: 'RFID',
           },
-          { text: 'Pelat Nomor', value: 'PelatNomor' },
+          { text: 'Pelat Nomor', value: 'PelatNomor', sortable: false, },
           { text: 'Waktu Masuk', value: 'WaktuMasuk' },
           { text: 'Bukti Masuk', value: 'BuktiMasuk', sortable: false, },
           { text: 'Waktu Keluar', value: 'WaktuKeluar' },
           { text: 'Bukti Keluar', value: 'BuktiKeluar', sortable: false, },
-          { text: 'Status', value: 'Status' },
+          { text: 'Status', value: 'Status', sortable: false, },
         ],
         items: [],
+        search: '',
         dialogVisible: false,
-        popupLink: ''
+        popupLink: '',
       }
     },
 
     mounted() {
-    this.getDataRiwayat();
-    // setInterval(this.getDataRiwayat,3000);
+      this.getDataRiwayat();
+      setInterval(this.getDataRiwayat,3000);
     },
 
     methods: {
@@ -100,11 +101,29 @@ export default {
         this.dialogVisible = true;
       },
       closeDialog() {
-      this.dialogVisible = false;
-      this.popupLink = '';
+        this.dialogVisible = false;
+        this.popupLink = '';
+      },
+    },
+
+    computed: {
+      filteredData() {
+        if (!this.search) {
+          return this.items;
+        }
+
+        const searchKeyword = parseInt(this.search);
+
+        return this.items.filter(item => {
+          // Sesuaikan dengan properti atau kolom "status" yang ingin Anda filter
+          const status = item.Status;
+
+          // Kembalikan item yang memenuhi kondisi pencarian
+          return status == searchKeyword;
+        });
+      }
     }
-    }
-  }
+}
 </script>
 
 <style scoped>
@@ -115,7 +134,5 @@ font-display: bold;
 .left-side{
 text-align: right;
 margin-top: 0px;
-}
-.right-side{
 }
 </style>

@@ -239,7 +239,6 @@
 
 <script>
 import axios from 'axios'
-import { VCard, VCardText } from 'vuetify/lib';
 
   export default{
     data() {
@@ -290,16 +289,6 @@ import { VCard, VCardText } from 'vuetify/lib';
         }
       },
 
-      // fetchApiDataJumlahKeluar() {
-      //   axios.get('https://gpujtk.polban.studio/get_riwayat_count') // Ubah URL sesuai dengan API Anda
-      //     .then(response => {
-      //       this.totalKeluar = response.data; // Mengambil nilai data dari respons API
-      //     })
-      //     .catch(error => {
-      //       console.error(error);
-      //     });
-      // },
-
       async getDataJumlahPeringatan() {
         try {
           const response = await axios.get('http://localhost:8080/get_problem_count'); // Ganti '/api/endpoint' dengan URL API yang sesuai
@@ -309,11 +298,6 @@ import { VCard, VCardText } from 'vuetify/lib';
         }
       }
     },
-
-    components: {
-      VCard,
-      VCardText
-    }
   }
   </script>
 
