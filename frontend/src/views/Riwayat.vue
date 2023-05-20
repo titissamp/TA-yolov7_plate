@@ -9,6 +9,7 @@
           Riwayat Pengguna Gedung Parkir Politeknik Negeri Bandung
         <v-spacer></v-spacer>
         <v-text-field
+          class="pt-4"
           v-model="search"
           append-icon="mdi-magnify"
           label="Filter Status"
