@@ -113,59 +113,59 @@
                 </v-icon> Gate Masuk
               </v-btn>
             </v-col>
-          <v-col
-          sm="5"
-          offset-sm="2"
-          md="6"
-          offset-md="0"
-          >
-            <v-card-subtitle class="subtitle">
-              <v-chip
-              color="green"
-              text-color="white"
-              >
-                Aktif
-              </v-chip>
-            </v-card-subtitle>
-          </v-col>
-          <v-col
-          sm="5"
-          md="6"
-          mr=auto
-          >
-          <v-btn
-            class="ma-2 pl-8"
-            outlined
-            color="orange"
-            x-large
+            <v-col
+            sm="5"
+            offset-sm="2"
+            md="6"
+            offset-md="0"
             >
-              <v-icon
-              dark
-              left
+              <v-card-subtitle class="subtitle">
+                <v-chip
+                color="green"
+                text-color="white"
+                >
+                  Aktif
+                </v-chip>
+              </v-card-subtitle>
+            </v-col>
+            <v-col
+            sm="5"
+            md="6"
+            mr=auto
+            >
+            <v-btn
+              class="ma-2 pl-8"
+              outlined
+              color="orange"
               x-large
-              class="pr-4"
               >
-              mdi-boom-gate-outline
-              </v-icon> Gate Keluar
-            </v-btn>
-          </v-col>
-          <v-col
-          sm="5"
-          offset-sm="2"
-          md="6"
-          offset-md="0"
-          >
-            <v-card-subtitle class="subtitle">
-              <v-chip
-              color="red"
-              text-color="white"
-              >
-                Tidak Aktif
-              </v-chip>
-            </v-card-subtitle>
-          </v-col>
-        </v-row>
-      </v-card>
+                <v-icon
+                dark
+                left
+                x-large
+                class="pr-4"
+                >
+                mdi-boom-gate-outline
+                </v-icon> Gate Keluar
+              </v-btn>
+            </v-col>
+            <v-col
+            sm="5"
+            offset-sm="2"
+            md="6"
+            offset-md="0"
+            >
+              <v-card-subtitle class="subtitle">
+                <v-chip
+                color="red"
+                text-color="white"
+                >
+                  Tidak Aktif
+                </v-chip>
+              </v-card-subtitle>
+            </v-col>
+          </v-row>
+        </v-card>
       </v-col>
     </v-row>
       <!-- <notification-component ref="notificationComponent"></notification-component> -->
@@ -194,11 +194,11 @@
         </v-col>
 
         <v-col
-        class="right-side"
+        class="right-side-pemberitahuan"
         sm="5"
         offset-sm="2"
         md="6"
-        mr="12"
+        pr="20"
         offset-md="0"
         >
           <v-btn
@@ -326,6 +326,12 @@ import axios from 'axios'
 }
 
 .right-side{
+  text-align: left;
+  margin-left: 4px;
+}
+
+.right-side-pemberitahuan{
   text-align: right;
+  padding-right: 4px;
 }
 </style>

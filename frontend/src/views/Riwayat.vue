@@ -11,7 +11,7 @@
         <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
-          label="Cari Status"
+          label="Filter Status"
           outlined
           dense
         ></v-text-field>
@@ -19,6 +19,7 @@
       <v-data-table
       :headers="headers"
       :items="filteredData"
+      :items-per-page="rows"
       class="elevation-1 pl-4 pr-4"
       >
         <template v-slot:[`item.BuktiMasuk`]="{ item }">
@@ -67,6 +68,7 @@ export default {
         search: '',
         dialogVisible: false,
         popupLink: '',
+        rows: 15
       }
     },
 
